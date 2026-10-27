@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daily Medication & Supplement Schedule — Asdale Dynamics, LLC</title>
+<link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span class="accent">AD</span> Daily Medication &amp; Supplement Schedule
+  </div>
+  <div class="toolbar">
+    <label style="margin:0;display:flex;align-items:center;gap:0.4rem;font-size:0.9rem;">
+      <input type="checkbox" id="toggle-large-print"> Large-print mode
+    </label>
+    <button type="button" class="primary" id="btn-export">Export JSON</button>
+    <button type="button" id="btn-import">Import JSON</button>
+    <input type="file" id="import-file" accept=".json" hidden>
+  </div>
+</header>
+
+<main>
+  <div class="disclaimer">
+    <strong>Education and organization only — not medical advice.</strong>
+    This tool helps you track medications and supplements. It does not diagnose,
+    treat, or replace a clinician or pharmacist. Talk to your healthcare team
+    before starting, stopping, or changing any medication or supplement.
+    All data stays on your device in browser storage; nothing is uploaded.
+  </div>
+
+  <nav class="week-tabs no-print">
+    <button type="button" class="active" data-nav="daily">Daily chart</button>
+    <button type="button" data-nav="weekly">Weekly chart</button>
+    <button type="button" data-nav="meds">Medications</button>
+    <button type="button" data-nav="refill">Refill tracker</button>
+  </nav>
+
+  <!-- Daily view -->
+  <section id="view-daily" data-view>
+    <div class="date-picker">
+      <button type="button" id="btn-prev-day">&larr;</button>
+      <button type="button" id="btn-today">Today</button>
+      <button type="button" id="btn-next-day">&rarr;</button>
+      <strong>Date:</strong> <span id="date-display"></span>
+      <input type="date" id="date-picker">
+    </div>
+    <div id="daily-list"></div>
+  </section>
+
+  <!-- Weekly view -->
+  <section id="view-weekly" data-view class="hidden">
+    <div class="date-picker">
+      <button type="button" id="btn-prev-week">&larr;</button>
+      <label>Week starting (Monday):</label>
+      <input type="date" id="week-picker">
+      <button type="button" id="btn-next-week">&rarr;</button>
+    </div>
+    <p class="small muted">Print this page (Ctrl+P / Cmd+P) for a paper weekly chart.</p>
+    <table class="week-grid">
+      <thead><tr><th class="date-col">Time</th></tr></thead>
+      <tbody id="week-grid"></tbody>
+    </table>
+  </section>
+
+  <!-- Medications view -->
+  <section id="view-meds" data-view class="hidden">
+    <div class="toolbar" style="justify-content:space-between;align-items:center;">
+      <div></div>
+      <button type="button" class="primary" id="btn-add-med">+ Add medication</button>
+    </div>
+    <div id="meds-list"></div>
+
+    <div id="med-form-card" class="hidden section">
+      <h2>Add / edit medication</h2>
+      <form id="med-form">
+        <div class="field-row">
+          <div class="field">
+            <label>Name</label>
+            <input type="text" id="med-name" placeholder="e.g. Vitamin D3" required>
+          </div>
+          <div class="field">
+            <label>Dose</label>
+            <input type="text" id="med-dose" placeholder="e.g. 2000 IU">
+          </div>
+        </div>
+        <div class="field">
+          <label>Times of day</label>
+          <div id="med-times"></div>
+          <button type="button" class="small" id="btn-add-time" style="margin-top:0.4rem;">+ Add time</button>
+        </div>
+        <div class="field">
+          <label>Days of the week</label>
+          <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+            <label style="margin:0;font-weight:600;font-size:0.875rem;"><input type="checkbox" id="day-0" value="0"> Sun</label>
+            <label style="margin:0;font-weight:600;font-size:0.875rem;"><input type="checkbox" id="day-1" value="1" checked> Mon</label>
+            <label style="margin:0;font-weight:600;font-size:0.875rem;"><input type="checkbox" id="day-2" value="2" checked> Tue</label>
+            <label style="margin:0;font-weight:600;font-size:0.875rem;"><input type="checkbox" id="day-3" value="3" checked> Wed</label>
+            <label style="margin:0;font-weight:600;font-size:0.875rem;"><input type="checkbox" id="day-4" value="4" checked> Thu</label>
+            <label style="margin:0;font-weight:600;font-size:0.875rem;"><input type="checkbox" id="day-5" value="5" checked> Fri</label>
+            <label style="margin:0;font-weight:600;font-size:0.875rem;"><input type="checkbox" id="day-6" value="6" checked> Sat</label>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Start date</label>
+            <input type="date" id="med-start">
+          </div>
+          <div class="field">
+            <label>End date (optional)</label>
+            <input type="date" id="med-end">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Quantity on hand (tablets/capsules)</label>
+            <input type="number" id="med-qty" min="0" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Refill alert threshold (days left)</label>
+            <input type="number" id="med-threshold" min="0" value="7" placeholder="7">
+          </div>
+        </div>
+        <div class="field">
+          <label>Notes / instructions</label>
+          <textarea id="med-instructions" rows="2" placeholder="e.g. take with food"></textarea>
+        </div>
+        <div id="med-errors"></div>
+        <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
+          <button type="button" class="danger small" id="btn-cancel-med" hidden>Cancel</button>
+          <button type="submit" class="primary" id="btn-save-med">Save medication</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Refill tracker view -->
+  <section id="view-refill" data-view class="hidden">
+    <div class="date-picker" style="margin-bottom:1rem;">
+      <strong>Reference date:</strong> <input type="date" id="refill-date">
+      <span class="small muted">Days left = quantity on hand ÷ doses per day.</span>
+    </div>
+    <table class="refill-table">
+      <thead>
+        <tr>
+          <th>Medication</th>
+          <th class="numeric">Doses per day</th>
+          <th class="numeric">On hand</th>
+          <th class="numeric">Days left</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="refill-table-body"></tbody>
+    </table>
+    <p class="small muted" id="refill-note">A "refill-soon" flag appears when days left fall at or below your threshold (default 7 days).</p>
+  </section>
+</main>
+
+<footer class="no-print" style="padding:1rem 1.5rem;color:var(--color-muted);font-size:0.875rem;border-top:1px solid var(--color-border);background:var(--color-surface);">
+  Built by <strong>Asdale Dynamics, LLC</strong> — beginner-friendly AI education, books, and practical tools.
+  <a href="https://dylanasdale.github.io" target="_blank" rel="noopener">dylanasdale.github.io</a>
+</footer>
+
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+<script type="module" src="src/app.js"></script>
+</body>
+</html>

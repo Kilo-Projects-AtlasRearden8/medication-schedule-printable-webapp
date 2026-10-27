@@ -1,0 +1,236 @@
+/* Daily Medication & Supplement Schedule — Asdale Dynamics, LLC */
+:root {
+  --color-bg: #f7f8fb;
+  --color-surface: #ffffff;
+  --color-text: #1f2937;
+  --color-muted: #6b7280;
+  --color-border: #d1d5db;
+  --color-primary: #1d4ed8;
+  --color-primary-hover: #1e40af;
+  --color-danger: #dc2626;
+  --color-success: #15803d;
+  --color-warning: #b45309;
+  --color-refill-soon-bg: #fef3c7;
+  --color-refill-soon-text: #92400e;
+  --color-large-print-text: #000000;
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --font-stack: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-stack);
+  line-height: 1.5;
+  font-size: 16px;
+}
+
+body { min-height: 100vh; display: flex; flex-direction: column; }
+
+a { color: var(--color-primary); }
+
+/* Header */
+header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 1.25rem; }
+.brand .accent { color: var(--color-primary); }
+
+.toolbar { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-top: 0.5rem; }
+
+button {
+  appearance: none;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+button:hover { background: #f3f4f6; border-color: #9ca3af; }
+button.primary { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+button.primary:hover { background: var(--color-primary-hover); }
+button.danger { color: var(--color-danger); border-color: #fca5a5; background: #fef2f2; }
+button.danger:hover { background: #fee2e2; }
+button.small { padding: 0.25rem 0.5rem; font-size: 0.85rem; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.25rem; color: var(--color-muted); }
+
+input, select, textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  font-size: 1rem;
+}
+
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--color-primary); }
+
+/* Layout */
+main { flex: 1; padding: 1.5rem; max-width: 1000px; margin: 0 auto; width: 100%; }
+
+section { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1.5rem; box-shadow: var(--shadow); }
+
+h2 { margin-top: 0; font-size: 1.125rem; display: flex; align-items: center; gap: 0.5rem; }
+h3 { font-size: 1rem; margin: 0 0 0.75rem; color: var(--color-muted); }
+
+p { margin: 0 0 1rem; }
+
+.grid { display: grid; gap: 1rem; }
+.grid.cols-2 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.grid.cols-3 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+.field { display: flex; flex-direction: column; }
+
+/* Disclaimer */
+.disclaimer {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: #92400e;
+  margin-bottom: 1rem;
+}
+.disclaimer strong { color: #78350f; }
+
+/* Medication list */
+.med-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.med-card { border: 1px solid var(--color-border); border-radius: var(--radius); padding: 0.85rem 1rem; background: #fff; }
+.med-card header { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.5rem; }
+.med-card h3 { margin: 0; font-size: 1rem; color: var(--color-text); }
+.med-card .dose { color: var(--color-primary); font-weight: 600; }
+.med-card .meta { font-size: 0.875rem; color: var(--color-muted); margin: 0.25rem 0; }
+.med-card .actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+
+.empty { text-align: center; color: var(--color-muted); padding: 2rem; }
+
+/* Daily view */
+.date-picker { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+
+.daily-chart { display: flex; flex-direction: column; gap: 0.5rem; }
+.dose-row {
+  display: grid;
+  grid-template-columns: 150px 1fr 60px;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: #fff;
+}
+.dose-row .med-name { font-weight: 600; }
+.dose-row .dose-info { color: var(--color-muted); font-size: 0.9rem; }
+.dose-row .taken-checkbox { width: 1.1rem; height: 1.1rem; }
+.dose-row.taken { opacity: 0.6; }
+.dose-row.taken .med-name { text-decoration: line-through; }
+
+.week-tabs { display: flex; gap: 0.25rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.week-tabs button.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+
+/* Weekly grid view */
+.week-grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.week-grid th, .week-grid td {
+  border: 1px solid var(--color-border);
+  padding: 0.5rem 0.4rem;
+  text-align: center;
+  vertical-align: top;
+  background: #fff;
+}
+.week-grid th { background: #eef2f7; font-weight: 700; font-size: 0.85rem; }
+.week-grid th.date-col { width: 110px; }
+.week-grid td.empty { background: #f9fafb; }
+.week-grid .cell-dose {
+  font-size: 0.8rem;
+  padding: 0.15rem 0.3rem;
+  border-radius: 4px;
+  margin: 0.1rem auto;
+  display: inline-block;
+  border: 1px solid var(--color-border);
+  width: fit-content;
+}
+.week-grid .cell-dose.taken { background: #dcfce7; border-color: #86efac; color: #166534; }
+
+/* Refill tracker */
+.refill-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.refill-table th, .refill-table td {
+  border: 1px solid var(--color-border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+.refill-table th { background: #eef2f7; font-weight: 700; }
+.refill-table .numeric { text-align: right; }
+.refill-table .badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.refill-table .badge-ok { background: #dcfce7; color: #166534; }
+.refill-table .badge-soon { background: #fef3c7; color: #92400e; }
+.refill-table .badge-refill-soon { background: #fef3c7; color: #92400e; }
+.refill-table .badge-unknown { background: #e5e7eb; color: #4b5563; }
+.refill-table .badge-unlimited { background: #dbeafe; color: #1e40af; }
+
+/* Export/import */
+.file-box { border: 1px dashed var(--color-border); border-radius: var(--radius); padding: 1rem; background: #f9fafb; text-align: center; }
+
+/* Print */
+@media print {
+  body { background: #fff; font-size: 11pt; }
+  header, .no-print, .toolbar, button, .date-picker, .week-tabs { display: none !important; }
+  section { border: none; box-shadow: none; margin-bottom: 0.5rem; break-inside: avoid; }
+  .dose-row { border: 1px solid #000; break-inside: avoid; }
+  .week-grid { page-break-inside: avoid; }
+  a { color: #000; text-decoration: none; }
+}
+
+@page { margin: 1.5cm; }
+
+/* Large-print mode */
+body.large-print { font-size: 20px; }
+body.large-print h2 { font-size: 1.5rem; }
+body.large-print h3 { font-size: 1.25rem; }
+body.large-print input, body.large-print select, body.large-print button { font-size: 1.1rem; padding: 0.6rem 1rem; }
+body.large-print .dose-row { padding: 0.9rem 1rem; font-size: 1.1rem; }
+body.large-print .week-grid th, body.large-print .week-grid td { padding: 0.75rem 0.5rem; font-size: 1rem; }
+body.large-print .cell-dose { font-size: 0.95rem; padding: 0.25rem 0.5rem; }
+body.large-print .taken-checkbox { width: 1.4rem; height: 1.4rem; }
+
+/* Utilities */
+.hidden { display: none !important; }
+.muted { color: var(--color-muted); }
+.error-text { color: var(--color-danger); font-size: 0.875rem; margin-top: 0.25rem; }
+.ok-text { color: var(--color-success); font-size: 0.875rem; margin-top: 0.25rem; }
+.small { font-size: 0.875rem; }
+
+form .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 600px) {
+  form .field-row { grid-template-columns: 1fr; }
+  header { flex-direction: column; align-items: stretch; }
+  .toolbar { justify-content: center; }
+}

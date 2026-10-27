@@ -1,0 +1,12 @@
+{
+  "name": "medication-schedule-printable-webapp",
+  "version": "1.0.0",
+  "description": "Local-first printable daily medication/supplement schedule chart and refill tracker (education/organization only)",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node tests/schedule.test.js",
+    "start": "serve ."
+  },
+  "license": "MIT"
+}
